@@ -16,7 +16,7 @@ class NotesDatabaseHelper(context:Context): SQLiteOpenHelper(context, "databaseN
     companion object {
         //tabelas com primeira letra maiuscula e colunas com a primeira letra minuscula
         const val TABLE_NOTES: String = "Notes"
-        const val TITLE: String = "title"
+        const val TITLE_NOTES: String = "title"
         const val DESCRIPTION_NOTES: String = "description"
     }
 }
