@@ -27,19 +27,21 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> 
 
         noteAdd = findViewById(R.id.note_add)
         noteAdd.setOnClickListener{
-
+            NotesDetailFragment().show(supportFragmentManager, "dialog")
         }
+
         //primeiro criar o adapter, depois realizar a instancia e set de atributos
         adapter = NotesAdapter(object : NoteClickedListener {
             override fun noteClickedItem(cursor: Cursor) {
                 val id:Long = cursor?.getLong(cursor.getColumnIndex(_ID))
+                val fragment = NotesDetailFragment.newInstance(id)
+                fragment.show(supportFragmentManager, "dialog")
             }
 
             override fun noteRemoveItem(cursor: Cursor?) {
                 val id: Long? = cursor?.getLong(cursor.getColumnIndex(_ID))
                 contentResolver.delete(Uri.withAppendedPath(URI_NOTES, id.toString()), null, null)
             }
-
         })
         adapter.setHasStableIds(true)
 
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> 
         noteRecyclerView.layoutManager = LinearLayoutManager(this)
         noteRecyclerView.adapter = adapter
 
+        LoaderManager.getInstance(this).initLoader(0, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> =
@@ -55,11 +58,11 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> 
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
         if (data != null) {
-
+            adapter.setCursor(data)
         }
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        TODO("Not yet implemented")
+        adapter.setCursor(null)
     }
 }
